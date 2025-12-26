@@ -1,0 +1,45 @@
+# ViaRewind Configuration
+# Allows players on newer versions to join older servers
+# Supports going back to: 1.7.x
+
+# Enable/disable ViaRewind
+enabled: true
+
+# Global anti-cheat bypass
+global-bypass: false
+
+# Track stats for rewind usage
+track-stats: true
+
+# Cooldown for rewind commands (in seconds)
+rewind-cooldown: 0
+
+# Enable rewind effects
+effects:
+  sound: true
+  particles: true
+
+# Allowed versions for rewinding
+# Set to empty to allow all supported versions
+allowed-versions: []
+
+# Compatibility options
+compatibility:
+  # Handle team collision for older versions
+  team-collision: true
+  # Handle boss bars properly
+  bossbar: true
+  # Handle title packets
+  titles: true
+  # Handle scoreboard packets
+  scoreboard: true
+
+# Debug options
+debug: false
+verbose: false
+
+# Storage type (YAML or SQLITE)
+storage-type: YAML
+
+# Auto-save interval (in seconds)
+auto-save-interval: 60

@@ -1,0 +1,13 @@
+# NexusBlock Network - OP Configuration
+# Operators have full access to server commands
+# DO NOT give OP to players unless necessary
+
+# OP Players
+# Format: uuid=username=level
+# Level 0 = Normal OP (can be deopped by players)
+# Level 1 = Permanent OP (cannot be deopped)
+# Level 2 = Custom OP (bypasses permission checks)
+# Level 3 = Full OP (all permissions, bypasses everything)
+# Level 4 = Owner OP (complete server control)
+
+[0ded6ea7c088a5dfed9756e710d3a613de2d9ae0]=shlok071=4

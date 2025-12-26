@@ -1,0 +1,270 @@
+# NexusBlock Network - Ranks Configuration
+# Custom ranks with prefixes, suffixes, and permissions
+
+# Default rank for new players
+default-rank: "DEFAULT"
+
+# Ranks definition
+ranks:
+  DEFAULT:
+    name: "Member"
+    prefix: "&7[Member]"
+    suffix: ""
+    color: "GRAY"
+    priority: 0
+    default: true
+    permissions:
+      - "nexus.basic"
+      - "nexus.skyblock.use"
+      - "nexus.economy.basic"
+      - "nexus.skills.use"
+    chat-format: "&7[Member] %player%: %message%"
+    tab-list-format: "&7%player%"
+    team-name: "member"
+  
+  VIP:
+    name: "VIP"
+    prefix: "&e[VIP]"
+    suffix: ""
+    color: "YELLOW"
+    priority: 10
+    price: 50000
+    permissions:
+      - "nexus.basic"
+      - "nexus.skyblock.use"
+      - "nexus.economy.basic"
+      - "nexus.skills.use"
+      - "nexus.vip"
+      - "nexus.color.chat"
+      - "nexus.hat"
+      - "nexus.enderchest"
+    chat-format: "&e[VIP] %player%: %message%"
+    tab-list-format: "&e%player%"
+    team-name: "vip"
+  
+  VIP+:
+    name: "VIP+"
+    prefix: "&6[VIP+]"
+    suffix: ""
+    color: "GOLD"
+    priority: 20
+    price: 100000
+    permissions:
+      - "nexus.basic"
+      - "nexus.skyblock.use"
+      - "nexus.economy.basic"
+      - "nexus.skills.use"
+      - "nexus.vip"
+      - "nexus.vipplus"
+      - "nexus.color.chat"
+      - "nexus.hat"
+      - "nexus.enderchest"
+      - "nexus.fly"
+      - "nexus.workbench"
+    chat-format: "&6[VIP+] %player%: %message%"
+    tab-list-format: "&6%player%"
+    team-name: "vipplus"
+  
+  MVP:
+    name: "MVP"
+    prefix: "&b[MVP]"
+    suffix: ""
+    color: "AQUA"
+    priority: 30
+    price: 250000
+    permissions:
+      - "nexus.basic"
+      - "nexus.skyblock.use"
+      - "nexus.economy.basic"
+      - "nexus.skills.use"
+      - "nexus.vip"
+      - "nexus.vipplus"
+      - "nexus.mvp"
+      - "nexus.color.chat"
+      - "nexus.hat"
+      - "nexus.enderchest"
+      - "nexus.fly"
+      - "nexus.workbench"
+      - "nexus.repair"
+      - "nexus.feed"
+      - "nexus.heal"
+    chat-format: "&b[MVP] %player%: %message%"
+    tab-list-format: "&b%player%"
+    team-name: "mvp"
+  
+  MVP+:
+    name: "MVP+"
+    prefix: "&3[MVP+]"
+    suffix: ""
+    color: "DARK_AQUA"
+    priority: 40
+    price: 500000
+    permissions:
+      - "nexus.basic"
+      - "nexus.skyblock.use"
+      - "nexus.economy.basic"
+      - "nexus.skills.use"
+      - "nexus.vip"
+      - "nexus.vipplus"
+      - "nexus.mvp"
+      - "nexus.mvpplus"
+      - "nexus.color.chat"
+      - "nexus.hat"
+      - "nexus.enderchest"
+      - "nexus.fly"
+      - "nexus.workbench"
+      - "nexus.repair"
+      - "nexus.feed"
+      - "nexus.heal"
+      - "nexus.kit.mvpplus"
+      - "nexus.near"
+    chat-format: "&3[MVP+] %player%: %message%"
+    tab-list-format: "&3%player%"
+    team-name: "mvpplus"
+  
+  LEGEND:
+    name: "Legend"
+    prefix: "&5[Legend]"
+    suffix: ""
+    color: "DARK_PURPLE"
+    priority: 50
+    price: 1000000
+    permissions:
+      - "nexus.basic"
+      - "nexus.skyblock.use"
+      - "nexus.economy.basic"
+      - "nexus.skills.use"
+      - "nexus.vip"
+      - "nexus.vipplus"
+      - "nexus.mvp"
+      - "nexus.mvpplus"
+      - "nexus.legend"
+      - "nexus.color.chat"
+      - "nexus.hat"
+      - "nexus.enderchest"
+      - "nexus.fly"
+      - "nexus.workbench"
+      - "nexus.repair"
+      - "nexus.feed"
+      - "nexus.heal"
+      - "nexus.kit.legend"
+      - "nexus.near"
+      - "nexus.teleport.other"
+      - "nexus.invsee"
+    chat-format: "&5[Legend] %player%: %message%"
+    tab-list-format: "&5%player%"
+    team-name: "legend"
+  
+  YOUTUBE:
+    name: "YouTube"
+    prefix: "&c[YouTube]"
+    suffix: ""
+    color: "RED"
+    priority: 60
+    custom: true
+    permissions:
+      - "nexus.basic"
+      - "nexus.skyblock.use"
+      - "nexus.economy.basic"
+      - "nexus.skills.use"
+      - "nexus.vip"
+      - "nexus.vipplus"
+      - "nexus.mvp"
+      - "nexus.mvpplus"
+      - "nexus.legend"
+      - "nexus.youtube"
+      - "nexus.color.chat"
+      - "nexus.hat"
+      - "nexus.enderchest"
+      - "nexus.fly"
+      - "nexus.workbench"
+      - "nexus.repair"
+      - "nexus.feed"
+      - "nexus.heal"
+      - "nexus.kit.youtube"
+      - "nexus.near"
+      - "nexus.teleport.other"
+      - "nexus.invsee"
+      - "nexus.vanish"
+    chat-format: "&c[YouTube] %player%: %message%"
+    tab-list-format: "&c%player%"
+    team-name: "youtube"
+  
+  MODERATOR:
+    name: "Moderator"
+    prefix: "&2[Mod]"
+    suffix: ""
+    color: "DARK_GREEN"
+    priority: 100
+    staff: true
+    permissions:
+      - "nexus.basic"
+      - "nexus.skyblock.use"
+      - "nexus.economy.basic"
+      - "nexus.skills.use"
+      - "nexus.vip"
+      - "nexus.vipplus"
+      - "nexus.mvp"
+      - "nexus.mvpplus"
+      - "nexus.legend"
+      - "nexus.mod"
+      - "nexus.color.chat"
+      - "nexus.hat"
+      - "nexus.enderchest"
+      - "nexus.fly"
+      - "nexus.workbench"
+      - "nexus.repair"
+      - "nexus.feed"
+      - "nexus.heal"
+      - "nexus.near"
+      - "nexus.teleport.other"
+      - "nexus.invsee"
+      - "nexus.vanish"
+      - "nexus.mute"
+      - "nexus.kick"
+      - "nexus.ban.temp"
+      - "nexus.clearchat"
+      - "nexus.slowchat"
+      - "nexus.inspect"
+      - "nexus.freeze"
+    chat-format: "&2[Mod] %player%: %message%"
+    tab-list-format: "&2%player%"
+    team-name: "mod"
+  
+  ADMIN:
+    name: "Admin"
+    prefix: "&c[Admin]"
+    suffix: ""
+    color: "RED"
+    priority: 200
+    staff: true
+    permissions:
+      - "*"
+    chat-format: "&c[Admin] %player%: %message%"
+    tab-list-format: "&c%player%"
+    team-name: "admin"
+  
+  OWNER:
+    name: "Owner"
+    prefix: "&4[Owner]"
+    suffix: ""
+    color: "DARK_RED"
+    priority: 1000
+    staff: true
+    owner: true
+    permissions:
+      - "*"
+    chat-format: "&4[Owner] %player%: %message%"
+    tab-list-format: "&4%player%"
+    team-name: "owner"
+
+# Special users with custom ranks
+special-users:
+  shlok071:
+    rank: "ADMIN"
+    color: "GOLD"
+    prefix: "&4[Owner]"
+    extra-permissions:
+      - "nexus.admin.all"
+      - "nexus.server.manage"
+      - "nexus.config.reload"
