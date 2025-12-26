@@ -28,6 +28,9 @@ import com.nexus.stats.StatsCommand;
 import com.nexus.warp.WarpManager;
 import com.nexus.warp.WarpCommand;
 import com.nexus.staff.StaffCommand;
+import com.nexus.guilds.GuildManager;
+import com.nexus.guilds.GuildCommand;
+import com.nexus.guilds.listeners.GuildListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -74,6 +77,9 @@ public class NexusCore extends JavaPlugin {
 
     // Warp System
     private WarpManager warpManager;
+
+    // Guild System
+    private GuildManager guildManager;
 
     // Server metrics and stats
     private int playerCount = 0;
@@ -148,6 +154,9 @@ public class NexusCore extends JavaPlugin {
 
         // Initialize Warp system
         initializeWarpSystem();
+
+        // Initialize Guild system
+        initializeGuildSystem();
 
         // Register commands
         registerCommands();
@@ -250,6 +259,16 @@ public class NexusCore extends JavaPlugin {
         logger.info("WarpManager initialized");
     }
 
+    /**
+     * Initialize the Guild system
+     */
+    private void initializeGuildSystem() {
+        // Guild system
+        guildManager = new GuildManager(this);
+        guildManager.initialize();
+        logger.info("GuildManager initialized");
+    }
+
     @Override
     public void onDisable() {
         logger.info("Disabling NexusCore...");
@@ -274,6 +293,9 @@ public class NexusCore extends JavaPlugin {
 
         // Shutdown Warp system
         if (warpManager != null) warpManager.shutdown();
+
+        // Shutdown Guild system
+        if (guildManager != null) guildManager.shutdown();
 
         // Save all data
         if (databaseManager != null) {
@@ -377,6 +399,9 @@ public class NexusCore extends JavaPlugin {
         // Staff commands
         getCommand("staff").setExecutor(new StaffCommand(this));
 
+        // Guild commands
+        getCommand("guild").setExecutor(new GuildCommand(this));
+
         logger.info("All commands registered successfully");
     }
 
@@ -410,6 +435,9 @@ public class NexusCore extends JavaPlugin {
 
         // Stats listeners (for scoreboard/tab updates)
         pm.registerEvents(new StatsListener(this), this);
+
+        // Guild listeners
+        pm.registerEvents(new GuildListener(this), this);
 
         logger.info("All event listeners registered successfully");
     }
@@ -541,6 +569,10 @@ public class NexusCore extends JavaPlugin {
 
     public WarpManager getWarpManager() {
         return warpManager;
+    }
+
+    public GuildManager getGuildManager() {
+        return guildManager;
     }
 
     public int getPlayerCount() {

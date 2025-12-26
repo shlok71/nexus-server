@@ -152,6 +152,16 @@ public class DatabaseManager {
                 ")"
             );
 
+            // Guilds table
+            stmt.execute(
+                "CREATE TABLE IF NOT EXISTS guilds (" +
+                "id VARCHAR(36) PRIMARY KEY," +
+                "name VARCHAR(16) NOT NULL UNIQUE," +
+                "tag VARCHAR(4) NOT NULL UNIQUE," +
+                "data TEXT NOT NULL" +
+                ")"
+            );
+
             plugin.getNexusLogger().info("All database tables created/verified");
 
         } catch (SQLException e) {
@@ -525,5 +535,83 @@ public class DatabaseManager {
         } catch (SQLException e) {
             plugin.getNexusLogger().log(Level.WARNING, "Failed to remove mute data", e);
         }
+    }
+
+    // Guild system methods
+
+    /**
+     * Save guild to database
+     */
+    public void saveGuild(com.nexus.guilds.Guild guild) {
+        String sql = "INSERT OR REPLACE INTO guilds (id, name, tag, data) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, guild.getId().toString());
+            stmt.setString(2, guild.getName());
+            stmt.setString(3, guild.getTag());
+            stmt.setString(4, new com.google.gson.Gson().toJson(guild.serialize()));
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to save guild", e);
+        }
+    }
+
+    /**
+     * Get all guilds from database
+     */
+    public List<Map<String, Object>> getAllGuilds() {
+        List<Map<String, Object>> guilds = new ArrayList<>();
+        String sql = "SELECT data FROM guilds";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String json = rs.getString("data");
+                Map<String, Object> data = new com.google.gson.Gson().fromJson(
+                    json, new com.google.gson.TypeToken<Map<String, Object>>(){}.getType());
+                guilds.add(data);
+            }
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to get guilds", e);
+        }
+
+        return guilds;
+    }
+
+    /**
+     * Delete guild from database
+     */
+    public void deleteGuild(UUID guildId) {
+        String sql = "DELETE FROM guilds WHERE id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, guildId.toString());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to delete guild", e);
+        }
+    }
+
+    /**
+     * Get guild by name
+     */
+    public Map<String, Object> getGuildByName(String name) {
+        String sql = "SELECT data FROM guilds WHERE name = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, name);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String json = rs.getString("data");
+                    return new com.google.gson.Gson().fromJson(
+                        json, new com.google.gson.TypeToken<Map<String, Object>>(){}.getType());
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to get guild by name", e);
+        }
+
+        return null;
     }
 }
