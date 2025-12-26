@@ -1,0 +1,17 @@
+# NexusBlock Network Messages - Ranks and Permissions
+
+# Rank Messages
+ranks:
+  notFound: "&cRank '%rank%' not found!"
+  playerNotFound: "&cPlayer '%player%' not found!"
+  notForSale: "&cThis rank is not available for purchase."
+  alreadyHave: "&cYou already have this rank or a higher one!"
+  notEnoughMoney: "&cYou need $%price% to buy this rank! (Your balance: $%balance%)"
+  setSuccess: "&aSuccessfully set %player%'s rank to %rank%!"
+  promoted: "&aYou have been promoted to %prefix% %rank%!"
+  purchaseSuccess: "&aYou have purchased the %rank% rank for $%price%!"
+
+# Permission Messages
+permissions:
+  noPermission: "&cYou don't have permission to use this command!"
+  insufficientRank: "&cYou need a higher rank to use this command!"

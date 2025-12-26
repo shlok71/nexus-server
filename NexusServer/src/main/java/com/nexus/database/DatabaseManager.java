@@ -376,4 +376,44 @@ public class DatabaseManager {
     public static String getAchievementsTable() {
         return ACHIEVEMENTS_TABLE;
     }
+
+    // Player Rank methods
+
+    /**
+     * Save player rank to database
+     */
+    public void savePlayerRank(UUID uuid, String rankId) {
+        String sql = "INSERT OR REPLACE INTO " + PLAYERS_TABLE + 
+                    " (uuid, rank_id) VALUES (?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+            stmt.setString(2, rankId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to save player rank", e);
+        }
+    }
+
+    /**
+     * Get player rank from database
+     */
+    public String getPlayerRank(UUID uuid) {
+        String rankId = null;
+        String sql = "SELECT rank_id FROM " + PLAYERS_TABLE + " WHERE uuid = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    rankId = rs.getString("rank_id");
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to get player rank", e);
+        }
+
+        return rankId;
+    }
 }

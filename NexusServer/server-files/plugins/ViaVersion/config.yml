@@ -1,0 +1,90 @@
+# ViaVersion Configuration
+# Cross-version compatibility for Minecraft 1.8 to 1.21+
+
+# Protocol versions
+# 47 = 1.8.x
+# 107 = 1.9
+# 108 = 1.9.1
+# 109 = 1.9.2
+# 110 = 1.10
+# 210 = 1.11
+# 315 = 1.12
+# 335 = 1.13
+# 340 = 1.13.2
+# 393 = 1.14
+# 401 = 1.14.1
+# 404 = 1.14.2
+# 477 = 1.15
+# 480 = 1.15.1
+# 485 = 1.15.2
+# 498 = 1.16
+# 573 = 1.16.1
+# 575 = 1.16.2
+# 578 = 1.16.3
+# 735 = 1.17
+# 736 = 1.17.1
+# 751 = 1.18
+# 755 = 1.18.2
+# 757 = 1.19
+# 758 = 1.19.1
+# 759 = 1.19.2
+# 760 = 1.19.3
+# 761 = 1.19.4
+# 762 = 1.20
+# 763 = 1.20.1
+# 764 = 1.20.2
+# 765 = 1.20.3
+# 766 = 1.20.4
+# 767 = 1.21
+# 768 = 1.21.1
+# 769 = 1.21.2
+# 770 = 1.21.3
+
+# Server configuration
+config-version: 22
+anti-xray-patch-logging: true
+backwards-compatibility: true
+bungee-ping-interval: 60
+bungee-pings: true
+chunk-edge-case-logging: false
+combat-log: true
+debug: false
+disable-metadata-cache: false
+disable-team-collision: false
+emerald-by-Xp: true
+entity-id-rewrite: true
+experience-rewrite: true
+forced-language: false
+get-latest-protocol-on-join: false
+handshake-packet-c2s-logging: false
+inventory-handling: true
+items-as-json: true
+lava-flow-speed: "default"
+map-image-packet-c2s-logging: false
+max-packet-elsewhere: 200
+max-packet-play-in: 131072
+nbt-array-size-limit: 65536
+no-op-if-new-user: false
+notify-on-new-storage: true
+only-ping-as-1_13: false
+player-commands-log: false
+rapid-rewrite: false
+redirect-entity-ids:
+  default: []
+redirect-light-info: []
+remove-gamma-packets: false
+retrack-mobs: true
+shield-pattern: "default"
+show-original-creative-inventory: false
+simulate-00-packets: false
+spigot-packet-limiter-log: false
+statistics:
+  enabled: true
+  verbose: true
+storm-weather: true
+synchronize-next-tick: false
+track-vehicles: true
+use-attribute-ids: true
+use-legacy-tile-names: "default"
+water-flow-speed: "default"
+window-click-handling: false

@@ -1,0 +1,93 @@
+# ViaBackwards Configuration
+# Allows players on older versions to join newer servers
+# Supports going forward from: 1.7.x to 1.21+
+
+# Enable/disable ViaBackwards
+enabled: true
+
+# Global anti-cheat bypass
+global-bypass: false
+
+# Track stats for backwards usage
+track-stats: true
+
+# Compatibility options for older clients
+compatibility:
+  # Handle player list (tab list)
+  player-list: true
+  # Handle attribute modifiers
+  attributes: true
+  # Handle potion effects
+  potion-effects: true
+  # Handle metadata
+  metadata: true
+  # Handle scoreboard
+  scoreboard: true
+  # Handle boss bars
+  bossbar: true
+  # Handle titles
+  titles: true
+  # Handle compound tags
+  compound-tags: true
+
+# Hide newer items from older clients
+hide-items:
+  enabled: true
+  # Items to hide (by ID)
+  hidden-items:
+    - "minecraft:totem_of_undying"
+    - "minecraft:crossbow"
+    - "minecraft:sweet_berries"
+    - "minecraft:campfire"
+    - "minecraft:bee_nest"
+    - "minecraft:beehive"
+    - "minecraft:honeycomb_block"
+    - "minecraft:honey_block"
+    - "minecraft:lodestone"
+    - "minecraft:netherite_block"
+    - "minecraft:netherite_scrap"
+    - "minecraft:netherite_ingot"
+    - "minecraft:netherite_pickaxe"
+    - "minecraft:netherite_axe"
+    - "minecraft:netherite_sword"
+    - "minecraft:netherite_shovel"
+    - "minecraft:netherite_hoe"
+    - "minecraft:netherite_helmet"
+    - "minecraft:netherite_chestplate"
+    - "minecraft:netherite_leggings"
+    - "minecraft:netherite_boots"
+    - "minecraft:copper_block"
+    - "minecraft:cut_copper"
+    - "minecraft:cut_copper_stairs"
+    - "minecraft:cut_copper_slab"
+    - "minecraft:exposed_copper"
+    - "minecraft:weathered_copper"
+    - "minecraft:oxidized_copper"
+    - "minecraft:lightning_rod"
+    - "minecraft:spore_blossom"
+    - "minecraft:azalea"
+    - "minecraft:flowering_azalea"
+    - "minecraft:moss_block"
+    - "minecraft:moss_carpet"
+    - "minecraft:big_dripleaf"
+    - "minecraft:small_dripleaf"
+    - "minecraft:powder_snow"
+    - "minecraft:glow_item_frame"
+    - "minecraft:glow_lichen"
+    - "minecraft:sculk_sensor"
+    - "minecraft:sculk_shrieker"
+    - "minecraft:sculk_catalyst"
+    - "minecraft:sculk"
+    - "minecraft:recovery_compass"
+    - "minecraft:nether_wart"
+    - "minecraft:shadow_item_frame"
+
+# Debug options
+debug: false
+verbose: false
+
+# Storage type (YAML or SQLITE)
+storage-type: YAML
+
+# Auto-save interval (in seconds)
+auto-save-interval: 60

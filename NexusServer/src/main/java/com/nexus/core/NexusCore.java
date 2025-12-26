@@ -19,6 +19,8 @@ import com.nexus.skyblock.skills.SkillsManager;
 import com.nexus.skyblock.skills.SkillsCommand;
 import com.nexus.skyblock.skills.listeners.SkillsListener;
 import com.nexus.skyblock.skills.achievements.AchievementManager;
+import com.nexus.ranks.RankManager;
+import com.nexus.ranks.RankCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,6 +56,9 @@ public class NexusCore extends JavaPlugin {
     // Skills and Achievements
     private SkillsManager skillsManager;
     private AchievementManager achievementManager;
+
+    // Ranks System
+    private RankManager rankManager;
 
     // Server metrics and stats
     private int playerCount = 0;
@@ -120,6 +125,9 @@ public class NexusCore extends JavaPlugin {
         // Initialize Skills system
         initializeSkillsSystem();
 
+        // Initialize Ranks system
+        initializeRanksSystem();
+
         // Register commands
         registerCommands();
 
@@ -182,6 +190,16 @@ public class NexusCore extends JavaPlugin {
         logger.info("AchievementManager initialized");
     }
 
+    /**
+     * Initialize the Ranks system
+     */
+    private void initializeRanksSystem() {
+        // Ranks system
+        rankManager = new RankManager(this);
+        rankManager.initialize();
+        logger.info("RankManager initialized");
+    }
+
     @Override
     public void onDisable() {
         logger.info("Disabling NexusCore...");
@@ -195,6 +213,9 @@ public class NexusCore extends JavaPlugin {
 
         // Shutdown Skills system
         if (skillsManager != null) skillsManager.shutdown();
+
+        // Shutdown Ranks system
+        if (rankManager != null) rankManager.shutdown();
 
         // Save all data
         if (databaseManager != null) {
@@ -288,6 +309,9 @@ public class NexusCore extends JavaPlugin {
 
         // Skills commands
         getCommand("skills").setExecutor(new SkillsCommand(this));
+
+        // Ranks commands
+        getCommand("rank").setExecutor(new RankCommand(this));
 
         logger.info("All commands registered successfully");
     }
@@ -430,6 +454,10 @@ public class NexusCore extends JavaPlugin {
 
     public AchievementManager getAchievementManager() {
         return achievementManager;
+    }
+
+    public RankManager getRankManager() {
+        return rankManager;
     }
 
     public int getPlayerCount() {

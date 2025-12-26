@@ -23,6 +23,8 @@ public class ConfigManager {
     private File configFile;
     private FileConfiguration warpsConfig;
     private File warpsFile;
+    private FileConfiguration ranksConfig;
+    private File ranksFile;
 
     public ConfigManager(NexusCore plugin) {
         this.plugin = plugin;
@@ -34,6 +36,7 @@ public class ConfigManager {
     public void loadConfigs() {
         loadMainConfig();
         loadWarpsConfig();
+        loadRanksConfig();
     }
 
     /**
@@ -176,6 +179,7 @@ public class ConfigManager {
     public void reloadConfigs() {
         loadMainConfig();
         loadWarpsConfig();
+        loadRanksConfig();
         plugin.getNexusLogger().info("All configurations reloaded");
     }
 
@@ -230,6 +234,40 @@ public class ConfigManager {
         }
 
         return warps;
+    }
+
+    /**
+     * Load ranks configuration
+     */
+    private void loadRanksConfig() {
+        File ranksFolder = new File(plugin.getDataFolder(), "ranks.yml");
+        ranksFile = ranksFolder;
+
+        if (!ranksFile.exists()) {
+            // Create default ranks configuration
+            try {
+                plugin.saveResource("ranks.yml", false);
+            } catch (Exception e) {
+                // Resource might not exist, create manually
+                try {
+                    ranksFile.createNewFile();
+                } catch (IOException ex) {
+                    plugin.getNexusLogger().warning("Failed to create ranks.yml");
+                }
+            }
+        }
+
+        ranksConfig = YamlConfiguration.loadConfiguration(ranksFile);
+    }
+
+    /**
+     * Reload all configurations
+     */
+    public void reloadConfigs() {
+        loadMainConfig();
+        loadWarpsConfig();
+        loadRanksConfig();
+        plugin.getNexusLogger().info("All configurations reloaded");
     }
 
     /**
@@ -294,5 +332,12 @@ public class ConfigManager {
      */
     public FileConfiguration getWarpsConfig() {
         return warpsConfig;
+    }
+
+    /**
+     * Get ranks configuration
+     */
+    public FileConfiguration getRanksConfig() {
+        return ranksConfig;
     }
 }
