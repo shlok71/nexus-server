@@ -1,0 +1,93 @@
+name: NexusCore
+version: 1.0.0
+main: com.nexus.core.NexusCore
+description: Core plugin for NexusBlock Network - Hypixel-style Minecraft Server
+author: NexusDev
+website: https://nexusblock.net
+softdepend:
+  - Vault
+  - PlaceholderAPI
+  - ProtocolLib
+  - ViaVersion
+  - ViaBackwards
+  - LibsDisguises
+  - Citizens
+load: POSTWORLD
+api-version: 1.8
+commands:
+  nexus:
+    description: Main NexusBlock Network command
+    usage: /nexus <subcommand>
+    permission: nexus.admin
+  hub:
+    description: Send player to the hub
+    usage: /hub
+    permission: nexus.hub
+  lobby:
+    description: Send player to lobby (alias for hub)
+    usage: /lobby
+    permission: nexus.hub
+  server:
+    description: Show server information
+    usage: /server
+    permission: nexus.server
+  msg:
+    description: Send a private message
+    usage: /msg <player> <message>
+    permission: nexus.msg
+  reply:
+    description: Reply to last private message
+    usage: /reply <message>
+    permission: nexus.msg
+  tpa:
+    description: Request teleport to player
+    usage: /tpa <player>
+    permission: nexus.tpa
+  tpaccept:
+    description: Accept teleport request
+    usage: /tpaccept
+    permission: nexus.tpa
+  tpdeny:
+    description: Deny teleport request
+    usage: /tpdeny
+    permission: nexus.tpa
+  warp:
+    description: Create or use warps
+    usage: /warp <warpname> or /warp set <name>
+    permission: nexus.warp
+  spawn:
+    description: Go to spawn point
+    usage: /spawn
+    permission: nexus.spawn
+permissions:
+  nexus.*:
+    description: All Nexus permissions
+    children:
+      nexus.admin: true
+      nexus.hub: true
+      nexus.server: true
+      nexus.msg: true
+      nexus.tpa: true
+      nexus.warp: true
+      nexus.spawn: true
+  nexus.admin:
+    description: Administrative access
+    default: op
+  nexus.hub:
+    description: Access to hub commands
+    default: true
+  nexus.server:
+    description: Access to server info
+    default: true
+  nexus.msg:
+    description: Private messaging
+    default: true
+  nexus.tpa:
+    description: Teleport requests
+    default: true
+  nexus.warp:
+    description: Use warps
+    default: true
+  nexus.spawn:
+    description: Go to spawn
+    default: true
