@@ -1,0 +1,59 @@
+# NexusCore Configuration File
+# Edit this file to customize your server
+
+# Hub Configuration
+hub:
+  world-name: hub
+  spawn:
+    x: 0
+    y: 100
+    z: 0
+    yaw: 0
+    pitch: 0
+  build-radius: 50
+  protection:
+    no-fall-damage: true
+    no-pvp: true
+    no-lava-damage: true
+    no-fire-damage: true
+    no-drowning: true
+    no-starvation: true
+    no-hunger-loss: true
+  double-jump:
+    enabled: true
+    max-jumps: 1
+
+# Authentication Configuration (for cracked servers)
+auth:
+  enabled: false
+  session-timeout: 300  # seconds
+
+# Economy Configuration
+economy:
+  starting-coins: 1000
+  starting-gems: 0
+
+# Chat Configuration
+chat:
+  enabled: true
+  cooldown-seconds: 2
+
+# SkyBlock Configuration
+skyblock:
+  world-name: skyblock
+  default-island-size: 100
+  spawn-protection: 3
+
+# Server Configuration
+server:
+  name: NexusBlock Network
+  max-players: 100
+
+# Database Configuration
+database:
+  type: sqlite
+  host: localhost
+  port: 3306
+  name: nexus
+  user: root
+  password: ""
