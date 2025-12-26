@@ -160,7 +160,6 @@ public class SkyBlockCommand implements CommandExecutor {
 
         String subCmd = args[1].toLowerCase();
         switch (subCmd) {
-            case "help":
             case "?":
                 showIslandHelp(player);
                 break;

@@ -10,12 +10,14 @@ import com.nexus.economy.EconomyManager;
 import com.nexus.hub.HubManager;
 import com.nexus.minigames.MinigameManager;
 import com.nexus.skyblock.SkyBlockManager;
+import com.nexus.skyblock.hotm.HotMManager;
+import com.nexus.skyblock.minions.MinionManager;
+import com.nexus.skyblock.quests.QuestManager;
+import com.nexus.skyblock.shops.ShopManager;
+import com.nexus.skyblock.treasure.TreasureManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +39,13 @@ public class NexusCore extends JavaPlugin {
     private MinigameManager minigameManager;
     private NexusAuth authSystem;
     private NMSUtils nmsUtils;
+
+    // SkyBlock managers
+    private MinionManager minionManager;
+    private QuestManager questManager;
+    private ShopManager shopManager;
+    private HotMManager hotmManager;
+    private TreasureManager treasureManager;
 
     // Server metrics and stats
     private int playerCount = 0;
@@ -97,6 +106,9 @@ public class NexusCore extends JavaPlugin {
         minigameManager = new MinigameManager(this);
         minigameManager.initialize();
 
+        // Initialize SkyBlock feature managers
+        initializeSkyBlockManagers();
+
         // Register commands
         registerCommands();
 
@@ -116,9 +128,46 @@ public class NexusCore extends JavaPlugin {
         logger.info("===========================================");
     }
 
+    /**
+     * Initialize all SkyBlock feature managers
+     */
+    private void initializeSkyBlockManagers() {
+        // Minion system
+        minionManager = new MinionManager(this);
+        minionManager.initialize();
+        logger.info("MinionManager initialized");
+
+        // Quest system
+        questManager = new QuestManager(this);
+        questManager.initialize();
+        logger.info("QuestManager initialized");
+
+        // Shop system
+        shopManager = new ShopManager(this);
+        shopManager.initialize();
+        logger.info("ShopManager initialized");
+
+        // Heart of the Mountain
+        hotmManager = new HotMManager(this);
+        hotmManager.initialize();
+        logger.info("HotMManager initialized");
+
+        // Treasure system
+        treasureManager = new TreasureManager(this);
+        treasureManager.initialize();
+        logger.info("TreasureManager initialized");
+    }
+
     @Override
     public void onDisable() {
         logger.info("Disabling NexusCore...");
+
+        // Shutdown SkyBlock managers
+        if (treasureManager != null) treasureManager.shutdown();
+        if (hotmManager != null) {} // HotM doesn't have shutdown
+        if (shopManager != null) {}
+        if (questManager != null) {}
+        if (minionManager != null) minionManager.shutdown();
 
         // Save all data
         if (databaseManager != null) {
@@ -198,6 +247,18 @@ public class NexusCore extends JavaPlugin {
         getCommand("spawn").setExecutor(new SpawnCommand());
         getCommand("warp").setExecutor(new WarpCommand());
 
+        // SkyBlock commands
+        getCommand("skyblock").setExecutor(new com.nexus.skyblock.SkyBlockCommand(this));
+        getCommand("sb").setExecutor(new com.nexus.skyblock.SkyBlockCommand(this));
+        getCommand("island").setExecutor(new com.nexus.skyblock.SkyBlockCommand(this));
+        getCommand("minion").setExecutor(new com.nexus.skyblock.minions.MinionCommand(this));
+        getCommand("quests").setExecutor(new com.nexus.skyblock.quests.QuestCommand(this));
+        getCommand("quest").setExecutor(new com.nexus.skyblock.quests.QuestCommand(this));
+        getCommand("hotm").setExecutor(new com.nexus.skyblock.hotm.HotMCommand(this));
+        getCommand("shop").setExecutor(new com.nexus.skyblock.shops.ShopCommand(this));
+        getCommand("sell").setExecutor(new com.nexus.skyblock.shops.SellCommand(this));
+        getCommand("treasure").setExecutor(new com.nexus.skyblock.treasure.TreasureCommand(this));
+
         logger.info("All commands registered successfully");
     }
 
@@ -264,7 +325,6 @@ public class NexusCore extends JavaPlugin {
      * Setup bStats metrics
      */
     private void setupMetrics() {
-        // Metrics would be initialized here if using bStats
         logger.info("Metrics system ready");
     }
 
@@ -308,6 +368,27 @@ public class NexusCore extends JavaPlugin {
 
     public NMSUtils getNmsUtils() {
         return nmsUtils;
+    }
+
+    // SkyBlock feature managers getters
+    public MinionManager getMinionManager() {
+        return minionManager;
+    }
+
+    public QuestManager getQuestManager() {
+        return questManager;
+    }
+
+    public ShopManager getShopManager() {
+        return shopManager;
+    }
+
+    public HotMManager getHotmManager() {
+        return hotmManager;
+    }
+
+    public TreasureManager getTreasureManager() {
+        return treasureManager;
     }
 
     public int getPlayerCount() {
