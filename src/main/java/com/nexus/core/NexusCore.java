@@ -15,6 +15,10 @@ import com.nexus.skyblock.minions.MinionManager;
 import com.nexus.skyblock.quests.QuestManager;
 import com.nexus.skyblock.shops.ShopManager;
 import com.nexus.skyblock.treasure.TreasureManager;
+import com.nexus.skyblock.skills.SkillsManager;
+import com.nexus.skyblock.skills.SkillsCommand;
+import com.nexus.skyblock.skills.listeners.SkillsListener;
+import com.nexus.skyblock.skills.achievements.AchievementManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,6 +50,10 @@ public class NexusCore extends JavaPlugin {
     private ShopManager shopManager;
     private HotMManager hotmManager;
     private TreasureManager treasureManager;
+    
+    // Skills and Achievements
+    private SkillsManager skillsManager;
+    private AchievementManager achievementManager;
 
     // Server metrics and stats
     private int playerCount = 0;
@@ -108,6 +116,9 @@ public class NexusCore extends JavaPlugin {
 
         // Initialize SkyBlock feature managers
         initializeSkyBlockManagers();
+        
+        // Initialize Skills system
+        initializeSkillsSystem();
 
         // Register commands
         registerCommands();
@@ -158,6 +169,19 @@ public class NexusCore extends JavaPlugin {
         logger.info("TreasureManager initialized");
     }
 
+    /**
+     * Initialize the Skills and Achievement system
+     */
+    private void initializeSkillsSystem() {
+        // Skills system
+        skillsManager = new SkillsManager(this);
+        logger.info("SkillsManager initialized");
+
+        // Achievement system
+        achievementManager = new AchievementManager(this);
+        logger.info("AchievementManager initialized");
+    }
+
     @Override
     public void onDisable() {
         logger.info("Disabling NexusCore...");
@@ -168,6 +192,9 @@ public class NexusCore extends JavaPlugin {
         if (shopManager != null) {}
         if (questManager != null) {}
         if (minionManager != null) minionManager.shutdown();
+
+        // Shutdown Skills system
+        if (skillsManager != null) skillsManager.shutdown();
 
         // Save all data
         if (databaseManager != null) {
@@ -259,6 +286,9 @@ public class NexusCore extends JavaPlugin {
         getCommand("sell").setExecutor(new com.nexus.skyblock.shops.SellCommand(this));
         getCommand("treasure").setExecutor(new com.nexus.skyblock.treasure.TreasureCommand(this));
 
+        // Skills commands
+        getCommand("skills").setExecutor(new SkillsCommand(this));
+
         logger.info("All commands registered successfully");
     }
 
@@ -286,6 +316,9 @@ public class NexusCore extends JavaPlugin {
         // World and block listeners
         pm.registerEvents(new BlockBreakListener(this), this);
         pm.registerEvents(new BlockPlaceListener(this), this);
+
+        // Skills listeners
+        pm.registerEvents(new SkillsListener(this), this);
 
         logger.info("All event listeners registered successfully");
     }
@@ -389,6 +422,14 @@ public class NexusCore extends JavaPlugin {
 
     public TreasureManager getTreasureManager() {
         return treasureManager;
+    }
+
+    public SkillsManager getSkillsManager() {
+        return skillsManager;
+    }
+
+    public AchievementManager getAchievementManager() {
+        return achievementManager;
     }
 
     public int getPlayerCount() {

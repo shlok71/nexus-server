@@ -6,7 +6,9 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -25,6 +27,8 @@ public class DatabaseManager {
     private static final String ECONOMY_TABLE = "economy";
     private static final String SKYBLOCK_TABLE = "skyblock_islands";
     private static final String WARP_TABLE = "warps";
+    private static final String SKILLS_TABLE = "player_skills";
+    private static final String ACHIEVEMENTS_TABLE = "player_achievements";
 
     public DatabaseManager(NexusCore plugin) {
         this.plugin = plugin;
@@ -114,6 +118,27 @@ public class DatabaseManager {
                 "created_by VARCHAR(36) NOT NULL," +
                 "created_at BIGINT NOT NULL," +
                 "uses INT DEFAULT 0" +
+                ")"
+            );
+
+            // Skills table
+            stmt.execute(
+                "CREATE TABLE IF NOT EXISTS " + SKILLS_TABLE + " (" +
+                "uuid VARCHAR(36) PRIMARY KEY," +
+                "skills_data TEXT NOT NULL" +
+                ")"
+            );
+
+            // Achievements table
+            stmt.execute(
+                "CREATE TABLE IF NOT EXISTS " + ACHIEVEMENTS_TABLE + " (" +
+                "id VARCHAR(64) NOT NULL," +
+                "uuid VARCHAR(36) NOT NULL," +
+                "name VARCHAR(64) NOT NULL," +
+                "description TEXT," +
+                "coins_reward INT DEFAULT 0," +
+                "unlocked_at BIGINT NOT NULL," +
+                "PRIMARY KEY (id, uuid)" +
                 ")"
             );
 
@@ -230,6 +255,96 @@ public class DatabaseManager {
         }
     }
 
+    // Skills methods
+
+    /**
+     * Save player skills data
+     */
+    public void savePlayerSkills(UUID uuid, Map<String, Object> skillsData) {
+        String sql = "INSERT OR REPLACE INTO " + SKILLS_TABLE + " (uuid, skills_data) VALUES (?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+            stmt.setString(2, new com.google.gson.Gson().toJson(skillsData));
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to save player skills", e);
+        }
+    }
+
+    /**
+     * Get player skills data
+     */
+    public Map<String, Object> getPlayerSkills(UUID uuid) {
+        Map<String, Object> data = new HashMap<>();
+        String sql = "SELECT skills_data FROM " + SKILLS_TABLE + " WHERE uuid = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String json = rs.getString("skills_data");
+                    data = new com.google.gson.Gson().fromJson(json, new com.google.gson.TypeToken<Map<String, Object>>(){}.getType());
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to get player skills", e);
+        }
+
+        return data;
+    }
+
+    // Achievements methods
+
+    /**
+     * Save player achievement
+     */
+    public void saveAchievement(UUID uuid, com.nexus.skyblock.skills.achievements.AchievementManager.Achievement achievement) {
+        String sql = "INSERT OR REPLACE INTO " + ACHIEVEMENTS_TABLE + " (id, uuid, name, description, coins_reward, unlocked_at) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, achievement.getId());
+            stmt.setString(2, uuid.toString());
+            stmt.setString(3, achievement.getName());
+            stmt.setString(4, achievement.getDescription());
+            stmt.setInt(5, achievement.getCoinsReward());
+            stmt.setLong(6, achievement.getUnlockedAt());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to save achievement", e);
+        }
+    }
+
+    /**
+     * Get player achievements
+     */
+    public List<Map<String, Object>> getPlayerAchievements(UUID uuid) {
+        List<Map<String, Object>> achievements = new ArrayList<>();
+        String sql = "SELECT * FROM " + ACHIEVEMENTS_TABLE + " WHERE uuid = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> achievement = new HashMap<>();
+                    achievement.put("id", rs.getString("id"));
+                    achievement.put("name", rs.getString("name"));
+                    achievement.put("description", rs.getString("description"));
+                    achievement.put("coinsReward", rs.getInt("coins_reward"));
+                    achievement.put("unlockedAt", rs.getLong("unlocked_at"));
+                    achievements.add(achievement);
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to get player achievements", e);
+        }
+
+        return achievements;
+    }
+
     /**
      * Get connection
      */
@@ -252,5 +367,13 @@ public class DatabaseManager {
 
     public static String getWarpTable() {
         return WARP_TABLE;
+    }
+
+    public static String getSkillsTable() {
+        return SKILLS_TABLE;
+    }
+
+    public static String getAchievementsTable() {
+        return ACHIEVEMENTS_TABLE;
     }
 }
