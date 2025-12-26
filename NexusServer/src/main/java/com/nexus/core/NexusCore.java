@@ -21,6 +21,13 @@ import com.nexus.skyblock.skills.listeners.SkillsListener;
 import com.nexus.skyblock.skills.achievements.AchievementManager;
 import com.nexus.ranks.RankManager;
 import com.nexus.ranks.RankCommand;
+import com.nexus.stats.StatsManager;
+import com.nexus.stats.ScoreboardManager;
+import com.nexus.stats.TabListManager;
+import com.nexus.stats.StatsCommand;
+import com.nexus.warp.WarpManager;
+import com.nexus.warp.WarpCommand;
+import com.nexus.staff.StaffCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -59,6 +66,14 @@ public class NexusCore extends JavaPlugin {
 
     // Ranks System
     private RankManager rankManager;
+
+    // Stats and UI Systems
+    private StatsManager statsManager;
+    private ScoreboardManager scoreboardManager;
+    private TabListManager tabListManager;
+
+    // Warp System
+    private WarpManager warpManager;
 
     // Server metrics and stats
     private int playerCount = 0;
@@ -127,6 +142,12 @@ public class NexusCore extends JavaPlugin {
 
         // Initialize Ranks system
         initializeRanksSystem();
+
+        // Initialize Stats and UI systems
+        initializeStatsSystem();
+
+        // Initialize Warp system
+        initializeWarpSystem();
 
         // Register commands
         registerCommands();
@@ -200,6 +221,35 @@ public class NexusCore extends JavaPlugin {
         logger.info("RankManager initialized");
     }
 
+    /**
+     * Initialize the Stats and UI systems
+     */
+    private void initializeStatsSystem() {
+        // Stats system
+        statsManager = new StatsManager(this);
+        logger.info("StatsManager initialized");
+
+        // Scoreboard system
+        scoreboardManager = new ScoreboardManager(this);
+        scoreboardManager.startAutoUpdateTask();
+        logger.info("ScoreboardManager initialized");
+
+        // Tab list system
+        tabListManager = new TabListManager(this);
+        tabListManager.startAutoUpdateTask();
+        logger.info("TabListManager initialized");
+    }
+
+    /**
+     * Initialize the Warp system
+     */
+    private void initializeWarpSystem() {
+        // Warp system
+        warpManager = new WarpManager(this);
+        warpManager.initialize();
+        logger.info("WarpManager initialized");
+    }
+
     @Override
     public void onDisable() {
         logger.info("Disabling NexusCore...");
@@ -216,6 +266,14 @@ public class NexusCore extends JavaPlugin {
 
         // Shutdown Ranks system
         if (rankManager != null) rankManager.shutdown();
+
+        // Shutdown Stats system
+        if (statsManager != null) statsManager.shutdown();
+        if (scoreboardManager != null) scoreboardManager.shutdown();
+        if (tabListManager != null) tabListManager.shutdown();
+
+        // Shutdown Warp system
+        if (warpManager != null) warpManager.shutdown();
 
         // Save all data
         if (databaseManager != null) {
@@ -313,6 +371,12 @@ public class NexusCore extends JavaPlugin {
         // Ranks commands
         getCommand("rank").setExecutor(new RankCommand(this));
 
+        // Stats commands
+        getCommand("stats").setExecutor(new StatsCommand(this));
+
+        // Staff commands
+        getCommand("staff").setExecutor(new StaffCommand(this));
+
         logger.info("All commands registered successfully");
     }
 
@@ -343,6 +407,9 @@ public class NexusCore extends JavaPlugin {
 
         // Skills listeners
         pm.registerEvents(new SkillsListener(this), this);
+
+        // Stats listeners (for scoreboard/tab updates)
+        pm.registerEvents(new StatsListener(this), this);
 
         logger.info("All event listeners registered successfully");
     }
@@ -458,6 +525,22 @@ public class NexusCore extends JavaPlugin {
 
     public RankManager getRankManager() {
         return rankManager;
+    }
+
+    public StatsManager getStatsManager() {
+        return statsManager;
+    }
+
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
+    }
+
+    public TabListManager getTabListManager() {
+        return tabListManager;
+    }
+
+    public WarpManager getWarpManager() {
+        return warpManager;
     }
 
     public int getPlayerCount() {

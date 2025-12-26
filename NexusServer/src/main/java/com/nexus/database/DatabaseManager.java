@@ -142,6 +142,16 @@ public class DatabaseManager {
                 ")"
             );
 
+            // Player mutes table
+            stmt.execute(
+                "CREATE TABLE IF NOT EXISTS player_mutes (" +
+                "uuid VARCHAR(36) PRIMARY KEY," +
+                "muted_by VARCHAR(36) NOT NULL," +
+                "reason TEXT," +
+                "expires_at BIGINT DEFAULT -1" +
+                ")"
+            );
+
             plugin.getNexusLogger().info("All database tables created/verified");
 
         } catch (SQLException e) {
@@ -415,5 +425,105 @@ public class DatabaseManager {
         }
 
         return rankId;
+    }
+
+    // Player Stats methods
+
+    /**
+     * Save player stats to database
+     */
+    public void savePlayerStats(UUID uuid, Map<String, Object> statsData) {
+        String sql = "INSERT OR REPLACE INTO " + PLAYERS_TABLE + 
+                    " (uuid, stats_data) VALUES (?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+            stmt.setString(2, new com.google.gson.Gson().toJson(statsData));
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to save player stats", e);
+        }
+    }
+
+    /**
+     * Get player stats from database
+     */
+    public Map<String, Object> getPlayerStats(UUID uuid) {
+        Map<String, Object> data = new HashMap<>();
+        String sql = "SELECT stats_data FROM " + PLAYERS_TABLE + " WHERE uuid = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String json = rs.getString("stats_data");
+                    data = new com.google.gson.Gson().fromJson(json, new com.google.gson.TypeToken<Map<String, Object>>(){}.getType());
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to get player stats", e);
+        }
+
+        return data;
+    }
+
+    // Mute system methods
+
+    /**
+     * Save mute data to database
+     */
+    public void saveMute(UUID playerId, com.nexus.staff.StaffCommand.MuteData muteData) {
+        String sql = "INSERT OR REPLACE INTO player_mutes (uuid, muted_by, reason, expires_at) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, playerId.toString());
+            stmt.setString(2, muteData.getMutedBy());
+            stmt.setString(3, muteData.getReason());
+            stmt.setLong(4, muteData.getExpiresAt());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to save mute data", e);
+        }
+    }
+
+    /**
+     * Get mute data from database
+     */
+    public com.nexus.staff.StaffCommand.MuteData getMute(UUID playerId) {
+        String sql = "SELECT * FROM player_mutes WHERE uuid = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, playerId.toString());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new com.nexus.staff.StaffCommand.MuteData(
+                        playerId,
+                        rs.getString("muted_by"),
+                        rs.getString("reason"),
+                        rs.getLong("expires_at")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to get mute data", e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Remove mute from database
+     */
+    public void removeMute(UUID playerId) {
+        String sql = "DELETE FROM player_mutes WHERE uuid = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, playerId.toString());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getNexusLogger().log(Level.WARNING, "Failed to remove mute data", e);
+        }
     }
 }
