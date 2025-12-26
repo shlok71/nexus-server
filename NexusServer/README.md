@@ -1,16 +1,23 @@
 # NexusBlock Network - Hypixel-Style Minecraft Server
 
-A complete Minecraft server implementation inspired by Hypixel, featuring a hub system, SkyBlock game mode, minigame framework, and cross-version compatibility.
+A complete Minecraft server implementation inspired by Hypixel, featuring a hub system, full Hypixel-style SkyBlock game mode, minigame framework, and public server access support.
 
 ## Features
 
 ### Core Features
 - **Hub System**: Fully featured lobby with game selector, cosmetics menu, and player profiles
-- **SkyBlock**: Complete SkyBlock implementation with island creation, terrain generation, and resource farming
-- **Minigame Framework**: Extensible framework for creating custom minigames
+- **Hypixel-SkyBlock**: Full implementation with minions, quests, NPC shops, HotM skill tree, and treasure system
+- **Minigame Framework**: Extensible framework for creating custom minigames (BedWars, Duels, etc.)
 - **Economy System**: Dual currency system (coins and gems) with Vault integration
 - **Authentication**: Optional account system for cracked/offline mode servers
 - **Chat System**: Formatted chat with spam filtering and cooldowns
+
+### SkyBlock Features (Hypixel-Style)
+- **Minion System**: Automated resource gathering with tiers, storage, and offline collection
+- **Quest System**: Story quests, daily challenges, and progression tracking
+- **NPC Shops**: Full vendor system with buy/sell mechanics
+- **Heart of the Mountain (HotM)**: Mining skill tree with perks and powder currency
+- **Treasure System**: Spawning treasure chests with randomized rewards
 
 ### Technical Features
 - **Cross-Version Support**: Works with Minecraft 1.8 through 1.21+ using ViaVersion
@@ -18,6 +25,7 @@ A complete Minecraft server implementation inspired by Hypixel, featuring a hub 
 - **High Performance**: Optimized for Paper/Spigot 1.8.8 with modern JVM settings
 - **Modular Design**: Plugin-based architecture with separate managers
 - **Database**: SQLite storage with easy migration path to MySQL
+- **Public Access Ready**: Velocity proxy setup for domain-based server access
 
 ## Requirements
 
@@ -83,6 +91,18 @@ Server Address: localhost:25565
 - `/island create` - Create new island
 - `/island home` - Teleport to island
 - `/island help` - View island commands
+- `/minion` - Minion management commands
+- `/quests` or `/quest` - Open quest log
+- `/hotm` - Open Heart of the Mountain interface
+- `/shop` - Open shop catalog
+- `/sell` - Sell items to shop
+
+### Minion Commands
+- `/minion place <type>` - Place a minion
+- `/minion upgrade` - Upgrade selected minion
+- `/minion storage` - Access minion storage
+- `/minion collect` - Collect all items
+- `/minion help` - View minion help
 
 ## Configuration
 
@@ -133,6 +153,42 @@ supported-versions:
 - "1.21.x"
 ```
 
+### Public Server Access
+
+For making your server accessible over the internet, see `PUBLIC_ACCESS_README.md`:
+
+```bash
+# Quick setup for public access
+./public-setup.sh
+```
+
+This will:
+1. Install all dependencies
+2. Build the plugin
+3. Download Velocity proxy
+4. Download Paper servers
+5. Generate secure forwarding secrets
+6. Configure everything for public access
+
+#### Server Architecture
+```
+Internet (Port 25565)
+       ↓
+   Velocity Proxy
+       ↓
+   ┌───┴───┐
+   ↓       ↓
+Hub    SkyBlock
+(25566) (25567)
+```
+
+#### Domain Setup
+1. Buy a domain (e.g., from Namecheap)
+2. Create A record: `play.yourdomain.com` → Your Public IP
+3. Open port 25565 on your router/firewall
+4. Start the proxy: `./velocity/start.sh`
+```
+
 ## Architecture
 
 ```
@@ -142,18 +198,64 @@ NexusServer/
 │   │   ├── commands/           # Command executors
 │   │   └── listeners/          # Event listeners
 │   ├── hub/                    # Hub management
-│   ├── skyblock/               # SkyBlock game mode
+│   ├── skyblock/               # Hypixel-style SkyBlock
+│   │   ├── minions/           # Minion system
+│   │   ├── quests/            # Quest system
+│   │   ├── shops/             # NPC shops
+│   │   ├── hotm/              # Heart of the Mountain
+│   │   └── treasure/          # Treasure chests
 │   ├── minigames/              # Minigame framework
 │   ├── economy/                # Economy system
 │   ├── auth/                   # Authentication
 │   ├── database/               # Database management
 │   └── utils/                  # Utility classes
+├── velocity/                   # Velocity proxy for public access
+│   ├── config/                # Proxy configuration
+│   └── start.sh               # Proxy startup script
 ├── server-files/
-│   ├── plugins/                # Plugin JARs
-│   ├── worlds/                 # World data
-│   └── logs/                   # Server logs
-└── pom.xml                     # Maven build configuration
+│   ├── plugins/               # Plugin JARs
+│   ├── worlds/                # World data
+│   └── logs/                  # Server logs
+├── PUBLIC_ACCESS_README.md    # Public server guide
+└── pom.xml                    # Maven build configuration
 ```
+
+## Hypixel-Style SkyBlock Features
+
+This implementation includes full Hypixel-style SkyBlock features:
+
+### Minion System
+Automated resource gathering that works even while offline:
+- **30+ Minion Types**: From Cobblestone to Enderman minions
+- **11 Tiers**: Each tier increases speed and capacity
+- **Storage System**: Minions collect items in their inventory
+- **Offline Collection**: Calculate resources gathered while away
+- **Upgrades**: Spend coins to upgrade minion tiers
+
+### Quest System
+- **Story Quests**: Progression through the SkyBlock adventure
+- **Mining Quests**: Gather ores and resources
+- **Farming Quests**: Grow and harvest crops
+- **Combat Quests**: Defeat mobs and bosses
+- **Rewards**: Coins, gems, and experience
+
+### NPC Shops
+- **8 Shop Types**: Coal Miner, Iron Merchant, Gold Merchant, Diamond Dealer, Farm Merchant, Lumberjack, Builder, Magic Merchant
+- **Buy/Sell**: Purchase items and sell resources
+- **Dynamic Pricing**: Based on supply and demand
+
+### Heart of the Mountain (HotM)
+Mining skill tree with 5 tiers:
+- **Mining Speed**: Up to 30% faster mining
+- **Mining Fortune**: Up to 65% bonus drops
+- **Special Perks**: Crystal Infusion, Titan Perseverance, Chimera
+- **Powder System**: Mithril and Gemstone Powder
+
+### Treasure System
+- **5 Treasure Types**: Common, Uncommon, Rare, Epic, Legendary
+- **Spawning**: Random treasure chests appear around the world
+- **Rewards**: Coins, ores, gems, and rare items
+- **Timers**: Chests despawn after time limit
 
 ## Adding Custom Minigames
 
